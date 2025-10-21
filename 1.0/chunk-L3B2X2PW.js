@@ -1,0 +1,1 @@
+import{$a as o,Ga as i,ab as n,mb as a}from"./chunk-QS6MTI54.js";import"./chunk-ODN5LVDJ.js";var m=class e{static \u0275fac=function(t){return new(t||e)};static \u0275cmp=i({type:e,selectors:[["app-ottimizzazione"]],decls:2,vars:0,template:function(t,p){t&1&&(o(0,"p"),a(1,"ottimizzazione presto in arrivo..."),n())},encapsulation:2})};export{m as Ottimizzazione};
