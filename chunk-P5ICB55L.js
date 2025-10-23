@@ -1,0 +1,1 @@
+import{Ia as t,ab as a,bb as n,ob as o}from"./chunk-IZFCH7PQ.js";import"./chunk-ODN5LVDJ.js";var z=class e{static \u0275fac=function(i){return new(i||e)};static \u0275cmp=t({type:e,selectors:[["app-digitalizzazione"]],decls:2,vars:0,template:function(i,p){i&1&&(a(0,"p"),o(1,"digitalizzazione presto in arrivo..."),n())},encapsulation:2})};export{z as Digitalizzazione};

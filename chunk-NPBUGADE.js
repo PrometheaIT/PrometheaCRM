@@ -1,1 +1,0 @@
-import{$a as t,Ga as n,ab as m,nb as a}from"./chunk-CVFHM34U.js";import"./chunk-ODN5LVDJ.js";var o=class i{static \u0275fac=function(e){return new(e||i)};static \u0275cmp=n({type:i,selectors:[["app-immagine"]],decls:2,vars:0,template:function(e,s){e&1&&(t(0,"p"),a(1,"immagine presto in arrivo..."),m())},encapsulation:2})};export{o as Immagine};
