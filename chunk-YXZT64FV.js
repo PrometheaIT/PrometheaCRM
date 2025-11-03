@@ -1,16 +1,16 @@
-import{a as c}from"./chunk-3ZXX2K2L.js";import{N as g,R as m}from"./chunk-6W5NKFNP.js";import{i as d}from"./chunk-ODN5LVDJ.js";var p=class l{backendUrl="http://localhost:3001";sendEmail(e){return d(this,null,function*(){console.log("\u{1F504} ArubaMailService: Invio a backend locale:",this.backendUrl);try{let i=yield fetch(`${this.backendUrl}/api/send-email`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:e.to,subject:e.subject,text:e.text,html:e.html})});if(console.log("\u{1F4E8} Stato risposta backend:",i.status,i.statusText),!i.ok){let o=yield i.text();throw new Error(`HTTP ${i.status}: ${o}`)}let n=yield i.json();return console.log("\u2705 Risposta backend:",n),n}catch(i){return console.error("\u274C Errore ArubaMailService:",i),{success:!1,error:i.message||"Errore di connessione al server email"}}})}static \u0275fac=function(i){return new(i||l)};static \u0275prov=g({token:l,factory:l.\u0275fac,providedIn:"root"})};var f=class l{constructor(e){this.arubaMailService=e}defaultFromEmail=c.defaultFromEmail||"commerciale@prometheasrl.it";functionsUrl=`${c.supabase.url.replace(".supabase.co",".functions.supabase.co")}/send-email-smtp`;sendEmail(e){return d(this,null,function*(){console.log("\u{1F504} EmailService: Invio TRAMITE ARUBA a:",e.to);let i=yield this.arubaMailService.sendEmail({to:e.to,subject:e.subject,text:e.message,html:e.html||this.generateFallbackHtml(e.message)});return console.log("\u{1F4E8} Risposta ArubaMailService:",i),i})}generateFallbackHtml(e){return`
+import{a as l}from"./chunk-BJBZOLF5.js";import{N as g,R as f}from"./chunk-6W5NKFNP.js";import{a as m,i as d}from"./chunk-ODN5LVDJ.js";var p=class c{backendUrl=l.mailBackendUrl||"http://localhost:3001";sendEmail(e){return d(this,null,function*(){console.log("\u{1F504} ArubaMailService: Invio a backend locale:",this.backendUrl);let i={to:e.to,subject:e.subject,text:e.text,html:e.html,attachments:e.attachments||[]};console.log("\u{1F50E} ArubaMailService payload:",{to:i.to,subject:i.subject,htmlStartsWith:i.html?.slice(0,200)});try{let o=yield fetch(`${this.backendUrl}/api/send-email`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(m({},i))});console.log("\u{1F4E8} Stato risposta backend:",o.status,o.statusText);let n=yield o.text(),t;try{t=JSON.parse(n)}catch{t={success:o.ok,raw:n}}return o.ok?(console.log("\u2705 Risposta backend:",t),t):(console.error("\u274C Backend error body:",n),{success:!1,error:t?.error||`HTTP ${o.status}: ${n}`})}catch(o){return console.error("\u274C Errore ArubaMailService:",o),{success:!1,error:o.message||"Errore di connessione al server email"}}})}static \u0275fac=function(i){return new(i||c)};static \u0275prov=g({token:c,factory:c.\u0275fac,providedIn:"root"})};var u=class c{constructor(e){this.arubaMailService=e}defaultFromEmail=l.defaultFromEmail||"commerciale@prometheasrl.it";functionsUrl=`${l.supabase.url.replace(".supabase.co",".functions.supabase.co")}/send-email-smtp`;sendEmail(e){return d(this,null,function*(){console.log("\u{1F504} EmailService: Invio TRAMITE ARUBA a:",e.to);let i=yield this.arubaMailService.sendEmail({to:e.to,subject:e.subject,text:e.message,html:e.html||this.generateFallbackHtml(e.message),attachments:e.attachments||[]});return console.log("\u{1F4E8} Risposta ArubaMailService:",i),i})}generateFallbackHtml(e){return`
       <div style="font-family: Arial, sans-serif; padding: 20px;">
         <div style="white-space: pre-line;">${e}</div>
       </div>
-    `}generateSingolaScadenzaMessage(e,i){let n=this.calcolaGiorniRimanenti(i.data_scadenza),o=new Date(i.data_scadenza).toLocaleDateString("it-IT");return`
+    `}generateSingolaScadenzaMessage(e,i){let o=this.calcolaGiorniRimanenti(i.data_scadenza),n=new Date(i.data_scadenza).toLocaleDateString("it-IT");return`
 Gentile ${e.referente||e.ragione_sociale},
 
-le ricordiamo che il ${o} scade il seguente pagamento:
+le ricordiamo che il ${n} scade il seguente pagamento:
 
 \u{1F4C5} ${i.tipo_scadenza}
 \u{1F4B6} Importo: ${i.importo} \u20AC
-\u{1F4CB} Scadenza: ${o}
-\u23F3 Giorni rimanenti: ${n}
+\u{1F4CB} Scadenza: ${n}
+\u23F3 Giorni rimanenti: ${o}
 
 Per qualsiasi chiarimento, restiamo a disposizione.
 
@@ -18,43 +18,43 @@ Cordiali saluti,
 Il team di Promethea S.r.l.
 \u{1F4DE} Telefono: [inserisci telefono]
 \u{1F310} Sito: [inserisci sito]
-    `}generateTutteScadenzeMessage(e,i){let n=i.filter(t=>this.calcolaGiorniRimanenti(t.data_scadenza)<=t.giorni_avviso),o=i.filter(t=>this.calcolaGiorniRimanenti(t.data_scadenza)>t.giorni_avviso),a=`
+    `}generateTutteScadenzeMessage(e,i){let o=i.filter(a=>this.calcolaGiorniRimanenti(a.data_scadenza)<=a.giorni_avviso),n=i.filter(a=>this.calcolaGiorniRimanenti(a.data_scadenza)>a.giorni_avviso),t=`
 Gentile ${e.referente||e.ragione_sociale},
 
 ecco il riepilogo delle sue prossime scadenze fiscali:
 
-`;return n.length>0&&(a+=`
+`;return o.length>0&&(t+=`
 \u26A0\uFE0F SCADENZE IMMINENTI:
 
-`,n.forEach(t=>{let s=this.calcolaGiorniRimanenti(t.data_scadenza),r=new Date(t.data_scadenza).toLocaleDateString("it-IT");a+=`\u{1F4C5} ${t.tipo_scadenza}
-`,a+=`   \u{1F4B6} ${t.importo} \u20AC
-`,a+=`   \u{1F4CB} Scade il ${r} (tra ${s} giorni)
-`,t.descrizione_altro&&(a+=`   \u{1F4DD} ${t.descrizione_altro}
-`),a+=`
-`})),o.length>0&&(a+=`
+`,o.forEach(a=>{let s=this.calcolaGiorniRimanenti(a.data_scadenza),r=new Date(a.data_scadenza).toLocaleDateString("it-IT");t+=`\u{1F4C5} ${a.tipo_scadenza}
+`,t+=`   \u{1F4B6} ${a.importo} \u20AC
+`,t+=`   \u{1F4CB} Scade il ${r} (tra ${s} giorni)
+`,a.descrizione_altro&&(t+=`   \u{1F4DD} ${a.descrizione_altro}
+`),t+=`
+`})),n.length>0&&(t+=`
 \u{1F4C5} PROSSIME SCADENZE:
 
-`,o.forEach(t=>{let s=this.calcolaGiorniRimanenti(t.data_scadenza),r=new Date(t.data_scadenza).toLocaleDateString("it-IT");a+=`\u{1F4C5} ${t.tipo_scadenza}
-`,a+=`   \u{1F4B6} ${t.importo} \u20AC
-`,a+=`   \u{1F4CB} Scade il ${r} (tra ${s} giorni)
-`,t.descrizione_altro&&(a+=`   \u{1F4DD} ${t.descrizione_altro}
-`),a+=`
-`})),a+=`
+`,n.forEach(a=>{let s=this.calcolaGiorniRimanenti(a.data_scadenza),r=new Date(a.data_scadenza).toLocaleDateString("it-IT");t+=`\u{1F4C5} ${a.tipo_scadenza}
+`,t+=`   \u{1F4B6} ${a.importo} \u20AC
+`,t+=`   \u{1F4CB} Scade il ${r} (tra ${s} giorni)
+`,a.descrizione_altro&&(t+=`   \u{1F4DD} ${a.descrizione_altro}
+`),t+=`
+`})),t+=`
 Per qualsiasi chiarimento o per prendere un appuntamento, restiamo a disposizione.
 
 Cordiali saluti,
 Il team di Promethea S.r.l.
 \u{1F4DE} Telefono: [inserisci telefono]
 \u{1F310} Sito: [inserisci sito]
-    `,a}calcolaGiorniRimanenti(e){let i=new Date,o=new Date(e).getTime()-i.getTime();return Math.ceil(o/(1e3*60*60*24))}generateSottoTaskCompletionHtml(e,i,n){let o=r=>(r||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),a=(n||[]).map(r=>`
+    `,t}calcolaGiorniRimanenti(e){let i=new Date,n=new Date(e).getTime()-i.getTime();return Math.ceil(n/(1e3*60*60*24))}generateSottoTaskCompletionHtml(e,i,o){let n=r=>(r||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),t=(o||[]).map(r=>`
     <tr>
       <td style="padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
-        <div style="font-weight: 600; color: #32025f; margin-bottom: 4px;">${o(r.nome)}</div>
-        ${r.data?`<div style="font-size: 13px; color: #666;">Scadenza: ${o(r.data)}</div>`:""}
-        ${r.descrizione?`<div style="font-size: 13px; color: #444; margin-top:8px; line-height:1.4;">${o(r.descrizione)}</div>`:""}
+        <div style="font-weight: 600; color: #32025f; margin-bottom: 4px;">${n(r.nome)}</div>
+        ${r.data?`<div style="font-size: 13px; color: #666;">Scadenza: ${n(r.data)}</div>`:""}
+        ${r.descrizione?`<div style="font-size: 13px; color: #444; margin-top:8px; line-height:1.4;">${n(r.descrizione)}</div>`:""}
       </td>
     </tr>
-  `).join(""),t=e?.referente||e?.ragione_sociale||"Cliente",s=new Date().getFullYear();return`
+  `).join(""),a=e?.referente||e?.ragione_sociale||"Cliente",s=new Date().getFullYear();return`
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -94,16 +94,16 @@ Il team di Promethea S.r.l.
         </div>
         <div class="email-body">
             <div class="greeting">
-                Gentile <strong>${o(t)}</strong>,<br>
+                Gentile <strong>${n(a)}</strong>,<br>
                 la informiamo che la seguente attivit\xE0 \xE8 stata completata con successo dal nostro team.
             </div>
             <div class="task-card">
-                <h2 class="task-title">${o(i)}</h2>
+                <h2 class="task-title">${n(i)}</h2>
                 <div class="badge">STATO: COMPLETATO</div>
             </div>
             <h3 class="section-title">DETTAGLI COMPLETATI</h3>
             <table class="details-table">
-                ${a}
+                ${t}
             </table>
             <div style="margin-top: 25px; padding: 15px; background: rgba(239, 0, 149, 0.05); border-radius: 8px; border-left: 3px solid #EF0095;">
                 <p style="margin: 0; color: #0F0F0F; line-height: 1.5;">
@@ -126,7 +126,7 @@ Il team di Promethea S.r.l.
     </div>
 </body>
 </html>
-  `}generateIntroEmailHtml(e,i){let n=h=>(h||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),o=e?.referente||e?.ragione_sociale||"Gentile Cliente",a=n(i||""),t=new Date().getFullYear(),s=typeof c<"u"&&c.frontendUrl?c.frontendUrl.replace(/\/$/,""):"",r=s?`${s}/assets/logo.png`:"cid:logo",u=s?`${s}/assets/logo-light.png`:"cid:logo_light";return`
+  `}generateIntroEmailHtml(e,i){let o=v=>(v||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),n=e?.referente||e?.ragione_sociale||"Gentile Cliente",t=o(i||""),a=new Date().getFullYear(),s=typeof l<"u"&&l.frontendUrl?l.frontendUrl.replace(/\/$/,""):"",r=s?`${s}/assets/logo.png`:"cid:logo@promethea",h=s?`${s}/assets/logo-light.png`:"cid:logo_light@promethea";return`
 <!doctype html>
 <html lang="it">
 <head>
@@ -163,7 +163,7 @@ Il team di Promethea S.r.l.
       </div>
     </div>
 
-    <p class="lead">Gentile <strong>${n(o)}</strong>,</p>
+    <p class="lead">Gentile <strong>${o(n)}</strong>,</p>
 
     <p>la ringrazio per l\u2019interesse dimostrato verso <strong>Promethea S.r.l.</strong>. Di seguito trovate una sintesi delle nostre competenze e delle soluzioni che offriamo:</p>
 
@@ -192,7 +192,7 @@ Il team di Promethea S.r.l.
       </ul>
     </div>
 
-    <p class="signature">Resto a disposizione per organizzare un incontro (in presenza o in videoconferenza).<br/>Cordiali saluti,<br/>${a?`<span>${a}</span>`:"<span>Il Team di Promethea S.r.l.</span>"}</p>
+    <p class="signature">Resto a disposizione per organizzare un incontro (in presenza o in videoconferenza).<br/>Cordiali saluti,<br/>${t?`<span>${t}</span>`:"<span>Il Team di Promethea S.r.l.</span>"}</p>
 
     <div class="contact">
       <div><strong>PROMETHEA S.R.L.</strong></div>
@@ -210,11 +210,11 @@ Il team di Promethea S.r.l.
 
     <div class="footer">
       <div class="footer-info">
-        &copy; ${t} Promethea S.r.l.
+        &copy; ${a} Promethea S.r.l.
       </div>
-      <img class="footer-logo" src="${u}" alt="Promethea" />
+      <img class="footer-logo" src="${h}" alt="Promethea" />
     </div>
   </div>
 </body>
 </html>
-    `}static \u0275fac=function(i){return new(i||l)(m(p))};static \u0275prov=g({token:l,factory:l.\u0275fac,providedIn:"root"})};export{f as a};
+    `}static \u0275fac=function(i){return new(i||c)(f(p))};static \u0275prov=g({token:c,factory:c.\u0275fac,providedIn:"root"})};export{u as a};
